@@ -12,6 +12,7 @@ int main()
         std::cout << data.get_length() << std::endl;
 
         data.get_fields();
+        data.dump_instructions();
     }
     catch (const std::exception& e)
     {

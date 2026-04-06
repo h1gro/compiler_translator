@@ -9,16 +9,6 @@
 
 #include <json.hpp>
 
-enum opers
-{
-    R0   = 0x0,
-    R1   = 0x1,
-    R2   = 0x2,
-    imm  = 0x3,
-    disp = 0x4,
-    code = 0x5
-};
-
 class CmdEncodingSystem
 {
 private:
@@ -59,15 +49,62 @@ private:
 
     std::vector<Field> fields;
 
-    struct Instracture
+    class Instructure
     {
-        std::list<std::string> insns;
-        std::list<opers> operands;
+    public:
+        std::map<int, std::string> insns;
+        std::vector<std::string> operands;
         std::string format;
         std::string comment;
+
+        Instructure(const std::string& format_, const std::string& comment_, const nlohmann::json& data) : format(format_), comment(comment_)
+        {
+            if (data.contains("insns"))
+            {
+                size_t i = 0;
+                for (const auto& cmd : data["insns"])
+                {
+                    insns[i] = cmd.get<std::string>();
+                    i++;
+                }
+            }
+
+            if (data.contains("operands"))
+            {
+                for (const auto& oper : data["operands"])
+                {
+                    operands.push_back(oper.get<std::string>());
+                }
+            }
+        }
+
+        void print_instructure () const
+        {
+            std::cout << "Format: " << format << "\n" << "Insns:" << std::endl;
+            print_insns();
+            std::cout << "Operands:" << std::endl;
+            print_operands();
+            std::cout << "Comment: " << comment << "\n" <<std::endl;
+        }
+
+        void print_insns () const
+        {
+            for (const auto& ins : insns)
+            {
+                std::cout << ins.first << " : " << ins.second << std::endl;
+            }
+        }
+
+        void print_operands () const
+        {
+            for (const auto& oper : operands)
+            {
+                std::cout << oper << std::endl;
+            }
+        }
     };
 
-    std::vector<std::unique_ptr<Instracture>> instructions;
+    std::vector<std::unique_ptr<Instructure>> instructions;
 
 public:
     CmdEncodingSystem(std::string file_path)
@@ -92,6 +129,12 @@ public:
                 fields.emplace_back(std::move(current_field));
             }
         }
+
+        for (const auto& instr_i : data["instructions"])
+        {
+            Instructure data_elem(instr_i.value("format", std::string{}), instr_i.value("comment", std::string{}), instr_i);
+            instructions.emplace_back(std::make_unique<Instructure>(std::move(data_elem)));
+        }
     }
 
     size_t get_length () const {return length;}
@@ -102,6 +145,18 @@ public:
             std::cout << field.operand << " : ";
             if (field.argument.is_min) {std::cout << ">=";}
             std::cout << field.argument.value << std::endl;
+        }
+    }
+
+    void dump_instructions() const
+    {
+        size_t i = 0;
+        for (const auto& elem : instructions)
+        {
+            if (!elem) {throw std::invalid_argument("Invalid ref on instructions!");}
+            std::cout << "elem " << i << std::endl;
+            elem->print_instructure();
+            i++;
         }
     }
 };
