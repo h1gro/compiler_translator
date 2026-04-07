@@ -12,7 +12,7 @@ int main()
         std::cout << data.get_length() << std::endl;
 
         data.get_fields();
-        data.dump_instructions();
+        data.dump_coding_format("../test/output.json");
     }
     catch (const std::exception& e)
     {
