@@ -131,18 +131,7 @@ private:
         return bits;
     }
 
-    static std::string to_binary(int val, int width)
-    {
-        std::string binary_string;
-        binary_string.reserve(width);
-
-        for (int i = width - 1; i >= 0; --i)
-        {
-            binary_string.push_back(((val >> i) & 1) ? '1' : '0');
-        }
-
-        return binary_string;
-    }
+    std::string to_binary(int val, int width) const;
 
     static bool intersects(const LayoutField& lhs, const LayoutField& rhs)
     {
@@ -241,7 +230,7 @@ private:
                     }
                 }
 
-                if (!used_somewhere || !can_grow){continue;}
+                if ((!used_somewhere) || (!can_grow)){continue;}
 
                 lf.size++;
                 changed = true;
@@ -366,7 +355,7 @@ private:
             LayoutField& current = layout[idx];
             bool assigned = false;
 
-            for (int msb = static_cast<int>(length) - 1; msb >= current.size - 1; --msb)
+            for (int msb = static_cast<int>(length) - 1; msb >= current.size - 1; msb--)
             {
                 current.msb = msb;
                 current.lsb = msb - current.size + 1;
@@ -405,7 +394,7 @@ private:
 
         for (const auto& lf : global_layout)
         {
-            if (format_index < lf.active_in_formats.size() && lf.active_in_formats[format_index])
+            if ((format_index < lf.active_in_formats.size()) && (lf.active_in_formats[format_index]))
             {
                 active.push_back(&lf);
             }

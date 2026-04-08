@@ -1,0 +1,26 @@
+{
+    "length" : "26",
+    "fields" : [
+        { "R0" : "5" },
+        { "R1" : "5" },
+        { "R2" : "5" },
+        { "R3" : "5" },
+        { "R4" : "5" },
+        { "R5" : "5" }
+    ],
+    "instructions" :
+    [
+        {
+            "insns" : ["add"],
+            "operands" : ["R0", "R1", "R2", "R3", "R4"],
+            "format" : "alu_instructions",
+            "comment" : "3-operand arithmetic and logic instructions, function call"
+        },
+        {
+            "insns" : ["load.b"],
+            "operands" : ["R0", "R1", "R3", "R4"],
+            "format" : "memory_access",
+            "comment" : "Instructions for reading and writing memory, short branches"
+        }
+    ]
+}

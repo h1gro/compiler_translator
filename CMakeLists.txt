@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(include)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/dump.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/dump.cpp src/utilits.cpp)
 
 # Флаги компиляции
 target_compile_options(${PROJECT_NAME} PRIVATE
