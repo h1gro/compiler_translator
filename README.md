@@ -83,5 +83,5 @@ make
 ```
 ### 4. Running example
 ```bash
-./compilator_translator ../test/input.json ../test/output.json
+./compilator_translator ../tests/input0.json ../tests/output.json
 ```
