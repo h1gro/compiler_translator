@@ -6,9 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(include)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/dump.cpp src/utilits.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/encode.cpp src/dump.cpp)
 
-# Флаги компиляции
 target_compile_options(${PROJECT_NAME} PRIVATE
     -D_DEBUG -ggdb3 -O0 -Wall -Wextra -Weffc++
     -Wmissing-declarations

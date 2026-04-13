@@ -1,7 +1,7 @@
 [
-{
-    "insn" : "add",
-    "fields" : 
+    {
+        "insn" : "add",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0000"}},
@@ -10,10 +10,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "sub",
-    "fields" : 
+    },
+    {
+        "insn" : "sub",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0001"}},
@@ -22,10 +22,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "mul",
-    "fields" : 
+    },
+    {
+        "insn" : "mul",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0010"}},
@@ -34,10 +34,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "div",
-    "fields" : 
+    },
+    {
+        "insn" : "div",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0011"}},
@@ -46,10 +46,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "and",
-    "fields" : 
+    },
+    {
+        "insn" : "and",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0100"}},
@@ -58,10 +58,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "or",
-    "fields" : 
+    },
+    {
+        "insn" : "or",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0101"}},
@@ -70,10 +70,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "xor",
-    "fields" : 
+    },
+    {
+        "insn" : "xor",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0110"}},
@@ -82,10 +82,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "lsl",
-    "fields" : 
+    },
+    {
+        "insn" : "lsl",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0111"}},
@@ -94,10 +94,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "lsr",
-    "fields" : 
+    },
+    {
+        "insn" : "lsr",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "1000"}},
@@ -106,10 +106,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "asr",
-    "fields" : 
+    },
+    {
+        "insn" : "asr",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "1001"}},
@@ -118,10 +118,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "cmp",
-    "fields" : 
+    },
+    {
+        "insn" : "cmp",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "1010"}},
@@ -130,10 +130,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "call",
-    "fields" : 
+    },
+    {
+        "insn" : "call",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "00"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "1011"}},
@@ -142,10 +142,10 @@
             {"R2"     : {"msb" :  8, "lsb" :  4, "value" : "+"}},
             {"RES0"   : {"msb" :  3, "lsb" :  0, "value" : "0000"}}
         ]
-},
-{
-    "insn" : "load.b",
-    "fields" : 
+    },
+    {
+        "insn" : "load.b",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0000"}},
@@ -153,10 +153,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "store.b",
-    "fields" : 
+    },
+    {
+        "insn" : "store.b",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0001"}},
@@ -164,10 +164,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "load.d",
-    "fields" : 
+    },
+    {
+        "insn" : "load.d",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0010"}},
@@ -175,10 +175,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "store.d",
-    "fields" : 
+    },
+    {
+        "insn" : "store.d",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0011"}},
@@ -186,10 +186,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "load.w",
-    "fields" : 
+    },
+    {
+        "insn" : "load.w",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0100"}},
@@ -197,10 +197,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "store.w",
-    "fields" : 
+    },
+    {
+        "insn" : "store.w",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0101"}},
@@ -208,10 +208,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "branch",
-    "fields" : 
+    },
+    {
+        "insn" : "branch",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0110"}},
@@ -219,10 +219,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "jump",
-    "fields" : 
+    },
+    {
+        "insn" : "jump",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "0111"}},
@@ -230,10 +230,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "sip",
-    "fields" : 
+    },
+    {
+        "insn" : "sip",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "1000"}},
@@ -241,10 +241,10 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "move",
-    "fields" : 
+    },
+    {
+        "insn" : "move",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "01"}},
             {"OPCODE" : {"msb" : 22, "lsb" : 19, "value" : "1001"}},
@@ -252,15 +252,15 @@
             {"R1"     : {"msb" : 13, "lsb" :  9, "value" : "+"}},
             {"IMM"    : {"msb" :  8, "lsb" :  0, "value" : "+"}}
         ]
-},
-{
-    "insn" : "branch.cond",
-    "fields" : 
+    },
+    {
+        "insn" : "branch.cond",
+        "fields" :
         [
             {"F"      : {"msb" : 24, "lsb" : 23, "value" : "10"}},
             {"CODE"   : {"msb" : 22, "lsb" : 19, "value" : "+"}},
             {"R0"     : {"msb" : 18, "lsb" : 14, "value" : "+"}},
             {"DISP"   : {"msb" : 13, "lsb" :  0, "value" : "+"}}
         ]
-}
+    }
 ]
