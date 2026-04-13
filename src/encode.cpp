@@ -1,9 +1,43 @@
 #include "../include/uncoded_data.hpp"
 #include "../include/encoded_data.hpp"
 
+struct CanonicalField
+{
+    std::string name;
+    // default unfilled states:
+    int  width  = 0;
+    bool is_min = false;
+    int  msb    = -1;
+    int  lsb    = -1;
+};
+
+class CanonicalBitesPos
+{
+public:
+    std::unordered_map<std::string, CanonicalField> canonical_positions;
+};
+
+EncodedData::Field add_operand_field (const std::string& oper, CanonicalBitesPos& canon, int& last_bit);
+
 EncodedData UncodedData::encode() const
 {
-    EncodedData encoded_data;
+    EncodedData       encoded_data;
+    CanonicalBitesPos canon_instr_map;
+
+    encoded_data.length = length; //from UncodedData
+
+    //-------------
+    //completion canon
+    for (const auto& src_field : fields)
+    {
+        CanonicalField field;
+        field.name   = src_field.operand;
+        field.width  = src_field.argument.value;
+        field.is_min = src_field.argument.is_min;
+
+        canon_instr_map.canonical_positions.emplace(field.name, std::move(field));
+    }
+    //-------------
 
     for (int i = 0; i < instructions.size(); i++)
     {
@@ -12,14 +46,15 @@ EncodedData UncodedData::encode() const
         for (const auto& insn : instr_group->insns)
         {
             EncodedData::Instruction current_instruction;
-            current_instruction.insn = insn.second;
+            current_instruction.last_bit = length - 1;
+            current_instruction.insn     = insn.second;
 
-            EncodedData::Field F_field = init_field(current_instruction.last_bit, i);
+            EncodedData::Field F_field = encoded_data.init_field(current_instruction.last_bit, i);
             current_instruction.fields.emplace_back(F_field);
 
             if (instr_group->insns.size() > 1)
             {
-                EncodedData::Field opcode_field = add_opcode_field(current_instruction.last_bit, insn.first);
+                EncodedData::Field opcode_field = encoded_data.add_opcode_field(current_instruction.last_bit, insn.first);
                 current_instruction.fields.emplace_back(opcode_field);
             }
 
@@ -27,7 +62,7 @@ EncodedData UncodedData::encode() const
             {
                 if (oper == "code")
                 {
-                    EncodedData::Field code_field = add_operand_field(oper, fields, current_instruction.last_bit);
+                    EncodedData::Field code_field = add_operand_field(oper, canon_instr_map, current_instruction.last_bit);
                     current_instruction.fields.emplace_back(code_field);
                     break;
                 }
@@ -37,20 +72,19 @@ EncodedData UncodedData::encode() const
             {
                 if (oper == "code") {continue;}
 
-                EncodedData::Field encoded_field = add_operand_field(oper, fields, current_instruction.last_bit);
+                EncodedData::Field encoded_field = add_operand_field(oper, canon_instr_map, current_instruction.last_bit);
 
                 current_instruction.fields.emplace_back(encoded_field);
             }
 
+            if (current_instruction.last_bit < 0) {throw std::invalid_argument("Length < sum of operands sizes in current instruction");}
+
             if (current_instruction.last_bit >= 0)
             {
-                expand_first_unfixed_operand(current_instruction);
-                if (current_instruction.last_bit >= 0)
-                {
-                    add_res_operand(current_instruction);
-                }
+                encoded_data.expand_first_unfixed_operand(current_instruction);
             }
 
+            encoded_data.add_res_operands(current_instruction);
             encoded_data.instructions.emplace_back(current_instruction);
         }
     }
@@ -58,8 +92,12 @@ EncodedData UncodedData::encode() const
     return encoded_data;
 }
 
-EncodedData::Field add_operand_field (const std::string& oper, const auto& fields, int& last_bit)
+EncodedData::Field add_operand_field (const std::string& oper, CanonicalBitesPos& canon, int& last_bit)
 {
+    auto it = canon.canonical_positions.find(oper);
+    if (it == canon.canonical_positions.end()){throw std::invalid_argument("Unknown operand!");}
+    auto& canonical = it->second;
+
     EncodedData::Field encoded_field;
     std::string output_name = oper;
 
@@ -69,114 +107,26 @@ EncodedData::Field add_operand_field (const std::string& oper, const auto& field
 
     encoded_field.set_name(output_name);
     encoded_field.set_value();
+    encoded_field.is_min = canonical.is_min;
 
-    bool found_flag = false;
-    for (const auto& upcoded_field : fields)
+    if (canonical.msb == -1)
     {
-        if (oper == upcoded_field.operand)
-        {
-            if (upcoded_field.argument.is_min) {encoded_field.is_min = true;}
+        encoded_field.msb = last_bit;
+        last_bit         -= (canonical.width - 1);
+        encoded_field.lsb = last_bit;
+        last_bit--;
 
-            encoded_field.msb = last_bit;
-            last_bit -= (upcoded_field.argument.value - 1);
-            encoded_field.lsb = last_bit;
-            last_bit--;
-
-            found_flag = true;
-            break;
-        }
+        canonical.msb = encoded_field.msb;
+        canonical.lsb = encoded_field.lsb;
     }
-
-    if (!found_flag) {throw std::invalid_argument("Unknown operand!");}
+    else
+    {
+        encoded_field.msb = canonical.msb;
+        encoded_field.lsb = canonical.lsb;
+        last_bit = encoded_field.lsb - 1;
+    }
 
     return encoded_field;
-}
-
-EncodedData::Field init_field (int& last_bit, int instruction_number)
-{
-    EncodedData::Field init_field;
-    init_field.set_name();
-
-    const int width = 2;
-    init_field.set_value(to_binary(instruction_number, width));
-
-    init_field.msb = last_bit; // = 24
-    init_field.lsb = init_field.msb - 1;
-    last_bit -= 2; // := 22
-
-    return init_field;
-}
-
-EncodedData::Field add_opcode_field (int& last_bit, int opcode)
-{
-    EncodedData::Field opcode_field;
-    opcode_field.set_name("OPCODE");
-
-    const int width = 4;
-
-    opcode_field.msb = last_bit;
-    opcode_field.lsb = opcode_field.msb - width + 1;
-    last_bit         = opcode_field.lsb - 1;
-
-    opcode_field.set_value(to_binary(opcode, width));
-    return opcode_field;
-}
-
-void expand_first_unfixed_operand (EncodedData::Instruction& instruction)
-{
-    bool is_oper_expand = 0;
-    for (int i = 0; i < instruction.fields.size(); i++)
-    {
-        if ((instruction.fields[i].is_min) && (!is_oper_expand))
-        {
-            std::cout << instruction.fields[i].name << std::endl;
-            if (instruction.fields[i].name == "CODE")
-            {
-                instruction.fields[i].lsb--;
-                for (int j = i; j < instruction.fields.size() - 1; j++)
-                {
-                    recalc_bites(instruction.fields[j+1], instruction.fields[j]);
-                }
-
-                instruction.last_bit = instruction.fields.back().lsb - 1;
-            }
-            else
-            {
-                instruction.fields[i].lsb -= (instruction.last_bit + 1);
-                is_oper_expand = true;
-            }
-
-            continue;
-        }
-
-        if ((is_oper_expand) && (instruction.fields[i].msb != instruction.fields[i-1].lsb - 1))
-        {
-            recalc_bites(instruction.fields[i], instruction.fields[i-1]);
-        }
-    }
-
-    instruction.last_bit = instruction.fields.back().lsb - 1;
-}
-
-void recalc_bites(EncodedData::Field& current_field, EncodedData::Field& previous_field)
-{
-    int msb_lsb_dif   = current_field.msb - current_field.lsb;
-    current_field.msb = previous_field.lsb - 1;
-    current_field.lsb = current_field.msb - msb_lsb_dif;
-}
-
-void add_res_operand (EncodedData::Instruction& instruction)
-{
-    EncodedData::Field res_field;
-    res_field.set_name("RES0");
-
-    res_field.msb        = instruction.last_bit;
-    res_field.lsb        = 0;
-    instruction.last_bit = -1;
-
-    res_field.set_value(std::string(res_field.msb - res_field.lsb + 1, '0'));
-
-    instruction.fields.emplace_back(res_field);
 }
 
 std::string to_binary (int number, int width)

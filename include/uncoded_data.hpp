@@ -88,16 +88,9 @@ protected:
         void print_instruction() const;
         void print_insns()       const;
         void print_operands()    const;
-
-        bool uses_operand(const std::string& operand_name) const;
     };
 
     std::vector<std::unique_ptr<Instruction>> instructions;
-
-    //Methods for writing encoding data in the output file
-    // void write_indent       (std::ostream& output_stream, int spaces) const;
-    // void write_inline_field (std::ostream& output_stream, const nlohmann::json& field_json) const;
-    // void write_fields_array (std::ostream& output_stream, const nlohmann::json& fields_json, int indent) const;
 
 public:
     explicit UncodedData(const std::string& file_path)
@@ -110,6 +103,11 @@ public:
 
         const std::string len_str = data.value("length", "0");
         length = static_cast<size_t>(std::stoi(len_str));
+
+        if (length <= 0)
+        {
+            throw std::invalid_argument("Input JSON is invalid: length must be positive");
+        }
 
         if (data.contains("fields"))
         {
