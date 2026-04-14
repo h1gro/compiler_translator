@@ -18,7 +18,7 @@ class EncodedData;
 
 class UncodedData
 {
-protected:
+private:
     size_t length;
 
     class OperType
@@ -29,7 +29,7 @@ protected:
 
         OperType() : is_min(false), value(0) {}
 
-        explicit OperType(const std::string& fields_value)
+        explicit OperType(const std::string& fields_value) : is_min(false), value(0)
         {
             if (fields_value.substr(0,2) == ">=")
             {
@@ -58,16 +58,17 @@ protected:
     class Instruction
     {
     public:
-        std::map<int, std::string> insns;
+        std::map<size_t, std::string> insns;
         std::vector<std::string> operands;
         std::string format;
         std::string comment;
 
-        Instruction(const std::string& format_, const std::string& comment_, const nlohmann::json& data) : format(format_), comment(comment_)
+        Instruction(const std::string& format_, const std::string& comment_, const nlohmann::json& data)
+            : insns(), operands(), format(format_), comment(comment_)
         {
             if (data.contains("insns"))
             {
-                int i = 0;
+                size_t i = 0;
                 for (const auto& cmd : data["insns"])
                 {
                     insns[i] = cmd.get<std::string>();
@@ -93,7 +94,7 @@ protected:
     std::vector<std::unique_ptr<Instruction>> instructions;
 
 public:
-    explicit UncodedData(const std::string& file_path)
+    explicit UncodedData(const std::string& file_path) : length(0), fields(), instructions()
     {
         std::ifstream file_stream(file_path);
         if (!file_stream){throw std::invalid_argument("Error in opening file!");}

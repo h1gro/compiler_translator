@@ -1,6 +1,6 @@
 #include "../include/encoded_data.hpp"
 
-EncodedData::Field EncodedData::init_field (int& last_bit, int instruction_number)
+EncodedData::Field EncodedData::init_field (int& last_bit, size_t instruction_number)
 {
     EncodedData::Field init_field;
     init_field.set_name();
@@ -14,8 +14,8 @@ EncodedData::Field EncodedData::init_field (int& last_bit, int instruction_numbe
 
     return init_field;
 }
-
-EncodedData::Field EncodedData::add_opcode_field (int& last_bit, int opcode)
+                                
+EncodedData::Field EncodedData::add_opcode_field (int& last_bit, size_t opcode)
 {
     EncodedData::Field opcode_field;
     opcode_field.set_name("OPCODE");
@@ -33,7 +33,7 @@ EncodedData::Field EncodedData::add_opcode_field (int& last_bit, int opcode)
 void EncodedData::expand_first_unfixed_operand (EncodedData::Instruction& instruction)
 {
     bool is_oper_expand = 0;
-    for (int i = 0; i < instruction.fields.size(); i++)
+    for (size_t i = 0; i < instruction.fields.size(); i++)
     {
         if ((instruction.fields[i].is_min) && (!is_oper_expand))
         {
@@ -41,7 +41,7 @@ void EncodedData::expand_first_unfixed_operand (EncodedData::Instruction& instru
             if (instruction.fields[i].name == "CODE")
             {
                 instruction.fields[i].lsb--;
-                for (int j = i; j < instruction.fields.size() - 1; j++)
+                for (size_t j = i; j < instruction.fields.size() - 1; j++)
                 {
                     recalc_bites(instruction.fields[j+1], instruction.fields[j]);
                 }
@@ -78,7 +78,7 @@ void EncodedData::add_res_operands (EncodedData::Instruction& instruction)
     int current_position = instruction.last_bit;
     int res_index        = 0;
 
-    for (int i = 0; i < instruction.fields.size(); i++)
+    for (size_t i = 0; i < instruction.fields.size(); i++)
     {
         if (current_position > instruction.fields[i].msb)
         {
@@ -89,8 +89,8 @@ void EncodedData::add_res_operands (EncodedData::Instruction& instruction)
             res_field.msb = current_position;
             res_field.lsb = instruction.fields[i].msb + 1;
 
-            res_field.set_value(std::string(res_field.msb - res_field.lsb + 1, '0'));
-            instruction.fields.insert(instruction.fields.begin() + i, std::move(res_field));
+            res_field.set_value(std::string(static_cast<size_t>(res_field.msb - res_field.lsb + 1), '0'));
+            instruction.fields.insert(instruction.fields.begin() + static_cast<long int>(i), std::move(res_field));
             i++;
         }
 
@@ -103,7 +103,7 @@ void EncodedData::add_res_operands (EncodedData::Instruction& instruction)
         res_field.set_name("RES" + std::to_string(res_index));
         res_field.msb = current_position;
         res_field.lsb = 0;
-        res_field.set_value(std::string(res_field.msb - res_field.lsb + 1, '0'));
+        res_field.set_value(std::string(static_cast<size_t>(res_field.msb - res_field.lsb + 1), '0'));
 
         instruction.fields.emplace_back(std::move(res_field));
     }

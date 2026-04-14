@@ -4,17 +4,19 @@
 struct CanonicalField
 {
     std::string name;
-    // default unfilled states:
-    int  width  = 0;
-    bool is_min = false;
-    int  msb    = -1;
-    int  lsb    = -1;
+    int  width;
+    bool is_min;
+    int  msb;
+    int  lsb;
+
+    CanonicalField() : name(), width(0), is_min(false), msb(-1), lsb(-1) {}
 };
 
 class CanonicalBitesPos
 {
 public:
     std::unordered_map<std::string, CanonicalField> canonical_positions;
+    CanonicalBitesPos() : canonical_positions() {}
 };
 
 EncodedData::Field add_operand_field (const std::string& oper, CanonicalBitesPos& canon, int& last_bit);
@@ -39,14 +41,14 @@ EncodedData UncodedData::encode() const
     }
     //-------------
 
-    for (int i = 0; i < instructions.size(); i++)
+    for (size_t i = 0; i < instructions.size(); i++)
     {
         const auto& instr_group = instructions[i];
 
         for (const auto& insn : instr_group->insns)
         {
             EncodedData::Instruction current_instruction;
-            current_instruction.last_bit = length - 1;
+            current_instruction.last_bit = static_cast<int>(length) - 1;
             current_instruction.insn     = insn.second;
 
             EncodedData::Field F_field = encoded_data.init_field(current_instruction.last_bit, i);
@@ -129,10 +131,10 @@ EncodedData::Field add_operand_field (const std::string& oper, CanonicalBitesPos
     return encoded_field;
 }
 
-std::string to_binary (int number, int width)
+std::string to_binary (size_t number, int width)
 {
     std::string binary_format;
-    binary_format.reserve(width);
+    binary_format.reserve(static_cast<size_t>(width));
 
     for (int i = width - 1; i >= 0; --i)
     {

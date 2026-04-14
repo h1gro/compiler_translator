@@ -65,13 +65,13 @@ void EncodedData::dump_instructions(std::ofstream& os) const
 {
     os << "[" << std::endl;
     const int key_width = 6;
-    for (int j = 0; j < instructions.size(); j++)
+    for (size_t j = 0; j < instructions.size(); j++)
     {
         const auto& insn = instructions[j];
         os << "{" << std::endl;
         os << "    \"insn\" : " << "\"" << insn.insn << "\"," << std::endl;
         os << "    \"fields\" : \n" << "        [" << std::endl;
-        for (int i = 0; i < insn.fields.size(); i++)
+        for (size_t i = 0; i < insn.fields.size(); i++)
         {
             int pad = key_width - static_cast<int>(insn.fields[i].name.size());
             if (pad < 0) { pad = 0; }
@@ -79,7 +79,7 @@ void EncodedData::dump_instructions(std::ofstream& os) const
             os << "            {\""
                 << insn.fields[i].name
                 << "\""
-                << std::string(pad, ' ')
+                << std::string(static_cast<size_t>(pad), ' ')
                 << " : {\"msb\" : "
                 << std::right << std::setw(2) << insn.fields[i].msb
                 << ", \"lsb\" : "
