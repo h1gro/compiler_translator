@@ -1,19 +1,16 @@
 #pragma once
 
-#include <algorithm>
 #include <fstream>
-#include <iomanip>
 #include <iostream>
 #include <map>
 #include <memory>
-#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
 
 #include <json.hpp>
-
+                         
 class EncodedData;
 
 class UncodedData

@@ -14,7 +14,7 @@ EncodedData::Field EncodedData::init_field (int& last_bit, size_t instruction_nu
 
     return init_field;
 }
-                                
+
 EncodedData::Field EncodedData::add_opcode_field (int& last_bit, size_t opcode)
 {
     EncodedData::Field opcode_field;
@@ -32,12 +32,12 @@ EncodedData::Field EncodedData::add_opcode_field (int& last_bit, size_t opcode)
 
 void EncodedData::expand_first_unfixed_operand (EncodedData::Instruction& instruction)
 {
-    bool is_oper_expand = 0;
+    bool is_oper_expand = false;
     for (size_t i = 0; i < instruction.fields.size(); i++)
     {
         if ((instruction.fields[i].is_min) && (!is_oper_expand))
         {
-            // std::cout << instruction.fields[i].name << std::endl;
+            //firstly expand "code" from size 3 -> 4
             if (instruction.fields[i].name == "CODE")
             {
                 instruction.fields[i].lsb--;
@@ -48,7 +48,7 @@ void EncodedData::expand_first_unfixed_operand (EncodedData::Instruction& instru
 
                 instruction.last_bit = instruction.fields.back().lsb - 1;
             }
-            else
+            else //expanding other >= operands:
             {
                 instruction.fields[i].lsb -= (instruction.last_bit + 1);
                 is_oper_expand = true;
@@ -68,9 +68,9 @@ void EncodedData::expand_first_unfixed_operand (EncodedData::Instruction& instru
 
 void recalc_bites(EncodedData::Field& current_field, EncodedData::Field& previous_field)
 {
-    int msb_lsb_dif   = current_field.msb - current_field.lsb;
+    int msb_lsb_dif   = current_field.msb  - current_field.lsb;
     current_field.msb = previous_field.lsb - 1;
-    current_field.lsb = current_field.msb - msb_lsb_dif;
+    current_field.lsb = current_field.msb  - msb_lsb_dif;
 }
 
 void EncodedData::add_res_operands (EncodedData::Instruction& instruction)

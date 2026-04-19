@@ -1,6 +1,8 @@
 #include "../include/uncoded_data.hpp"
 #include "../include/encoded_data.hpp"
 
+// this struct contains canonical (similar operands must be in the same bit positions)
+// information about operands in current format
 struct CanonicalField
 {
     std::string name;
@@ -9,6 +11,7 @@ struct CanonicalField
     int  msb;
     int  lsb;
 
+    // msb, lsb = -1 -- unused field
     CanonicalField() : name(), width(0), is_min(false), msb(-1), lsb(-1) {}
 };
 
@@ -17,29 +20,35 @@ class CanonicalBitesPos
 public:
     std::unordered_map<std::string, CanonicalField> canonical_positions;
     CanonicalBitesPos() : canonical_positions() {}
+
+    void completion(const auto& fields)
+    {
+        for (const auto& src_field : fields)
+        {
+            CanonicalField field;
+            field.name   = src_field.operand;
+            field.width  = src_field.argument.value;
+            field.is_min = src_field.argument.is_min;
+
+            canonical_positions.emplace(field.name, std::move(field));
+        }
+    }
 };
 
 EncodedData::Field add_operand_field (const std::string& oper, CanonicalBitesPos& canon, int& last_bit);
 
+//=======================================================================================================
+// the key function of the project, that performs encoding
 EncodedData UncodedData::encode() const
 {
+    //create instances of classes
     EncodedData       encoded_data;
     CanonicalBitesPos canon_instr_map;
 
     encoded_data.length = length; //from UncodedData
 
-    //-------------
-    //completion canon
-    for (const auto& src_field : fields)
-    {
-        CanonicalField field;
-        field.name   = src_field.operand;
-        field.width  = src_field.argument.value;
-        field.is_min = src_field.argument.is_min;
-
-        canon_instr_map.canonical_positions.emplace(field.name, std::move(field));
-    }
-    //-------------
+    //completing map of canonical fields information from input fields
+    canon_instr_map.completion(fields);
 
     for (size_t i = 0; i < instructions.size(); i++)
     {
@@ -54,14 +63,18 @@ EncodedData UncodedData::encode() const
             EncodedData::Field F_field = encoded_data.init_field(current_instruction.last_bit, i);
             current_instruction.fields.emplace_back(F_field);
 
+            //-----------------CODE/OPCODE--------------------------------
+            //in current tests json files this condition don't progress in case: "insn" : "branch.cond"
             if (instr_group->insns.size() > 1)
             {
                 EncodedData::Field opcode_field = encoded_data.add_opcode_field(current_instruction.last_bit, insn.first);
                 current_instruction.fields.emplace_back(opcode_field);
             }
 
+            //check if instructure use operand "code"
             for (const auto& oper : instr_group->operands)
             {
+                // as same as a previous: for "branch.cond"
                 if (oper == "code")
                 {
                     EncodedData::Field code_field = add_operand_field(oper, canon_instr_map, current_instruction.last_bit);
@@ -69,6 +82,7 @@ EncodedData UncodedData::encode() const
                     break;
                 }
             }
+            //-------------------------------------------------
 
             for (const auto& oper : instr_group->operands)
             {
@@ -93,6 +107,8 @@ EncodedData UncodedData::encode() const
 
     return encoded_data;
 }
+//=======================================================================================================
+
 
 EncodedData::Field add_operand_field (const std::string& oper, CanonicalBitesPos& canon, int& last_bit)
 {
@@ -104,7 +120,7 @@ EncodedData::Field add_operand_field (const std::string& oper, CanonicalBitesPos
     std::string output_name = oper;
 
     if (oper == "code") output_name = "CODE";
-    if (oper == "imm")  output_name = "IMM";
+    if (oper == "imm" ) output_name = "IMM";
     if (oper == "disp") output_name = "DISP";
 
     encoded_field.set_name(output_name);

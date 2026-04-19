@@ -3,7 +3,7 @@
 #include <iostream>
 #include "json.hpp"
 #include "uncoded_data.hpp"
-                              
+
 class EncodedData
 {
 public:
@@ -47,4 +47,4 @@ public:
 };
 
 std::string to_binary (size_t number, int width);
-void recalc_bites(EncodedData::Field& current_field, EncodedData::Field& previous_field);
+void recalc_bites (EncodedData::Field& current_field, EncodedData::Field& previous_field);
